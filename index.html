@@ -5,36 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Навигация 99,9% — мини-апп</title>
 
-  <!-- Telegram Mini App JS (не критично, но оставим) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Шрифты под эстетику сайта -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ====== ТЕМА/ПАЛИТРА (как на лендинге) ====== */
     :root{
-      --bg-base: #C8D2D1;             /* серый фон страницы */
-      --brand:  #68904D;              /* тёплый оранжевый центр */
-      --brand-strong:#14471E;         /* плотный оранжевый */
-      --text:  #111111;               /* основной текст */
-      --muted: #63666a;               /* вторичный текст */
-      --card:  rgba(255,255,255,.72); /* карты слегка молочные */
-      --line:  rgba(17,17,17,.10);    /* деликатные бордеры */
-      --chip:  #ffffff;               /* фон табов/кнопок */
+      /* фон: можно оставить градиент, или подключить фоновое изображение:
+         поменяй --bg-image: url('assets/nav-bg.jpg');  на none, если не нужно */
+      --bg-image: none;
+      --bg-base: #eeeeef;
+      --brand:  #ffb224;
+      --brand-strong:#f7a21b;
+      --text:  #111111;
+      --muted: #63666a;
+      --card:  rgba(255,255,255,.72);
+      --line:  rgba(17,17,17,.10);
+      --chip:  #ffffff;
       --chip-border: rgba(17,17,17,.16);
       --chip-ring: rgba(247,162,27,.45);
-      --cta:   #2f6fce;               /* кнопка "Связаться" */
+      --cta:   #2f6fce;
       --cta-text:#ffffff;
+      --nav-bg: rgba(255,255,255,.92);
+      --nav-border: rgba(17,17,17,.10);
+      --nav-active: #111111;
+      --nav-muted: #6c6f75;
     }
 
-    /* ====== БАЗА ====== */
     html, body {height: 100%;}
     body{
       margin:0;
       color:var(--text);
-      font: 15px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      /* Градиент как на сайте: оранжевый центр + серый фон */
+      font: 15px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
       background:
         radial-gradient(1200px 900px at 65% 35%,
           rgba(247,162,27, .95) 0%,
@@ -44,13 +46,23 @@
           rgba(247,162,27, .08) 74%,
           rgba(247,162,27, 0) 78%)
         , var(--bg-base);
+      background-image: var(--bg-image), radial-gradient(1200px 900px at 65% 35%,
+          rgba(247,162,27, .95) 0%,
+          rgba(247,162,27, .75) 30%,
+          rgba(247,162,27, .35) 55%,
+          rgba(247,162,27, .15) 68%,
+          rgba(247,162,27, .08) 74%,
+          rgba(247,162,27, 0) 78%), none;
+      background-size: cover, auto;
+      background-repeat:no-repeat;
+      background-attachment: fixed;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
 
-    .app{ max-width: 980px; margin: 0 auto; padding: 16px; }
+    .app{ max-width: 980px; margin: 0 auto; padding: 16px 16px 88px; } /* место под нижнее меню */
 
-    /* ====== Шапка ====== */
+    /* Шапка */
     .header{
       display:flex; gap:16px; align-items:center;
       background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.70));
@@ -73,7 +85,7 @@
     }
     .subtitle{ color:var(--muted); margin-top:4px; }
 
-    /* ====== Табы ====== */
+    /* Верхние чипы-табы (оставляем как быстрые фильтры) */
     .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 10px; }
     .tab{
       background:var(--chip);
@@ -88,14 +100,14 @@
       box-shadow: 0 0 0 3px var(--chip-ring);
     }
 
-    /* ====== Поиск ====== */
+    /* Поиск */
     .search{
       width:100%; padding:12px 14px; border-radius:14px;
       border:1px solid var(--line); background:rgba(255,255,255,.85);
       outline:none;
     }
 
-    /* ====== Секции/карты ====== */
+    /* Секции/карты */
     .section{
       background: var(--card); border:1px solid var(--line);
       border-radius:22px; padding:16px; margin-top:14px;
@@ -127,12 +139,41 @@
     }
     .btn.brand{
       background:var(--cta); color:var(--cta-text);
-      border-color:rgba(0,0,0,.0);
+      border-color:transparent;
       box-shadow: 0 4px 18px rgba(47,111,206,.25);
     }
-    .footer-space{ height:22px; }
 
-    /* скрытый сервисный футер — полностью убран */
+    /* Нижняя навигация */
+    .nav{
+      position:fixed; left:0; right:0; bottom:0;
+      background: var(--nav-bg);
+      border-top:1px solid var(--nav-border);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+    }
+    .nav-wrap{
+      max-width:980px; margin:0 auto; padding:8px 12px 10px;
+      display:flex; justify-content:space-between; gap:8px;
+    }
+    .nav-btn{
+      flex:1 1 0;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      padding:8px 6px; border-radius:12px; border:1px solid transparent;
+      background:transparent; cursor:pointer; user-select:none;
+      font-weight:600; color:var(--nav-muted);
+      transition: background .2s, color .2s, border-color .2s, transform .05s;
+    }
+    .nav-btn:active{ transform: translateY(1px); }
+    .nav-btn.active{
+      color:var(--nav-active);
+      background:#fff;
+      border-color:var(--nav-border);
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+    .nav-ico{ font-size:18px; line-height:1; }
+    .nav-txt{ font-size:12px; }
+
+    .footer-space{ height:22px; }
     .footer{ display:none; }
   </style>
 </head>
@@ -147,10 +188,10 @@
       </div>
     </div>
 
-    <!-- Табы -->
+    <!-- Верхние чипы-табы -->
     <div class="tabs" id="tabs"></div>
 
-    <!-- Поиск (скрываем на "Связь") -->
+    <!-- Поиск (показываем только в «Рубрики») -->
     <input id="search" class="search" placeholder="Поиск по заголовкам…"/>
 
     <!-- Контент -->
@@ -159,12 +200,28 @@
     <div class="footer-space"></div>
   </div>
 
+  <!-- Нижняя навигация -->
+  <nav class="nav">
+    <div class="nav-wrap">
+      <button class="nav-btn" data-tab="rubrics">
+        <span class="nav-ico">🏷️</span><span class="nav-txt">Рубрики</span>
+      </button>
+      <button class="nav-btn" data-tab="podcast">
+        <span class="nav-ico">🎙️</span><span class="nav-txt">Подкаст</span>
+      </button>
+      <button class="nav-btn" data-tab="cases">
+        <span class="nav-ico">📂</span><span class="nav-txt">Кейсы</span>
+      </button>
+      <button class="nav-btn" data-tab="contact">
+        <span class="nav-ico">✉️</span><span class="nav-txt">Связь</span>
+      </button>
+    </div>
+  </nav>
+
   <script>
-    // ========== Telegram init (оставим, но цвета фиксируем своей темой) ==========
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
-    // ========== ДАННЫЕ (редактируешь только тут) ==========
     const DATA = {
       contact: { username: 'Agavrichkova', url: 'https://t.me/Agavrichkova' },
       tabs: [
@@ -195,19 +252,32 @@
       ]
     };
 
-    // ========== УТИЛЫ ==========
     const $ = s => document.querySelector(s);
+    function $all(s){ return Array.from(document.querySelectorAll(s)); }
     function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); }
     function contactUrl(){ return DATA.contact?.url || `https://t.me/${DATA.contact?.username}`; }
 
-    // ========== РЕНДЕР ==========
     const tabsEl = $('#tabs');
     const contentEl = $('#content');
     const searchEl = $('#search');
+    const navButtons = $all('.nav-btn');
+
     let activeTab = (new URLSearchParams(location.hash.slice(1))).get('tab') || 'rubrics';
 
     function updateHash(){
       const url = new URL(location); url.hash = `tab=${activeTab}`; history.replaceState(null,'',url);
+    }
+
+    function setTab(id){
+      activeTab = id;
+      updateHash();
+      draw();
+      // активное состояние нижних кнопок
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      // активное состояние верхних чипов
+      $all('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+      // скроллим к верху контента для UX
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderTabs(){
@@ -215,10 +285,11 @@
       DATA.tabs.forEach(t=>{
         const b = document.createElement('button');
         b.className = 'tab';
+        b.dataset.tab = t.id;
         b.textContent = t.title;
         b.setAttribute('role','tab');
         b.setAttribute('aria-selected', String(t.id===activeTab));
-        b.onclick = ()=>{ activeTab = t.id; updateHash(); draw(); };
+        b.onclick = ()=> setTab(t.id);
         tabsEl.appendChild(b);
       });
     }
@@ -233,9 +304,11 @@
       renderTabs();
       const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
 
-      // Поиск видим только в "Рубрики"
       searchEl.style.display = (tab.id==='rubrics') ? 'block' : 'none';
       const q = (searchEl.value || '').trim().toLowerCase();
+
+      // подсветка нижней навигации
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab.id));
 
       if (tab.id==='contact'){
         contentEl.innerHTML = `
@@ -251,9 +324,7 @@
         return;
       }
 
-      // контент секциями
       const wrap = document.createElement('div');
-      wrap.className = '';
 
       (tab.groups||[]).forEach(g=>{
         const sec = document.createElement('div'); sec.className='section';
@@ -261,7 +332,6 @@
 
         const column = document.createElement('div'); column.className='grid';
 
-        // Фильтруем по поиску в "Рубриках"
         let items = g.items || [];
         if (tab.id==='rubrics' && q) items = items.filter(it => (it.title||'').toLowerCase().includes(q));
 
@@ -274,8 +344,6 @@
             card.querySelector('button').onclick = ()=> openLink(it.link || it.audio);
             column.appendChild(card);
           });
-
-          // счётчик
           const cnt = document.createElement('div');
           cnt.className = 'pill';
           cnt.style.width='100%'; cnt.style.justifyContent='center';
@@ -294,10 +362,13 @@
       contentEl.appendChild(wrap);
     }
 
+    // клики по нижнему меню
+    navButtons.forEach(b => b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+
     searchEl.addEventListener('input', draw);
-    draw();
+
+    // первая отрисовка
+    setTab(activeTab);
   </script>
 </body>
 </html>
-
-
