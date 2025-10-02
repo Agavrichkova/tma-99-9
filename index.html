@@ -3,56 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>99,9% — мини‑апп</title>
+  <title>Навигация 99,9% — мини-апп</title>
+
   <!-- Telegram Mini App JS -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Fonts (под эстетику лендинга) -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0e0e10;           /* тёмная тема по умолчанию */
+      --bg: #f6f6f6;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #63666a;
+      --brand: #ff9d2f;              /* апельсиновый акцент */
+      --brand2: #ffdc9a;             /* светлый для градиента */
+      --line: #e8e8ea;
+      --success: #16a34a;
+    }
+    [data-theme="dark"] {
+      --bg: #0f0f11;
       --card: #151518;
       --text: #f2f2f3;
       --muted: #a7a7ad;
-      --brand: #f3c76b;        /* тёплый акцент под эстетику канала */
-      --line: #242427;
-      --success: #16a34a;
-    }
-    [data-theme="light"] {
-      --bg: #ffffff;
-      --card: #f7f7f8;
-      --text: #151518;
-      --muted: #5b5b62;
-      --brand: #d39b16;
-      --line: #eaeaec;
+      --brand: #ffb24a;
+      --brand2: #5a3c16;
+      --line: #26262b;
     }
 
     html, body { height: 100%; }
     body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font: 14px/1.45 -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
-    .app { max-width: 880px; margin: 0 auto; padding: 16px; }
-    .header { display:flex; gap:12px; align-items:center; padding:12px; border-radius:16px; background:var(--card); }
-    .avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--brand),transparent), #ddd; flex:0 0 44px; }
-    .title { font-weight:700; font-size:16px; }
-    .subtitle { color:var(--muted); font-size:12px; }
+    h1,h2,h3,.title {
+      font-family: "Montserrat", "Manrope", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      letter-spacing: 0.2px;
+    }
 
-    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 6px; }
+    .app { max-width: 920px; margin: 0 auto; padding: 16px; }
+
+    /* HEADER */
+    .header {
+      display:flex; gap:12px; align-items:center; padding:16px;
+      border-radius:18px; background:var(--card); border:1px solid var(--line);
+      position: relative; overflow: hidden;
+    }
+    .header::after{
+      content:""; position:absolute; inset:-40% -20% auto auto; height:180px; width:320px;
+      background: radial-gradient(120px 120px at 80% 40%, var(--brand) 0%, transparent 70%),
+                  radial-gradient(220px 220px at 100% 0%, var(--brand2) 0%, transparent 60%);
+      opacity:.25; pointer-events:none;
+    }
+    .avatar { width:52px; height:52px; border-radius:50%;
+      background: radial-gradient(60px 60px at 70% 30%, var(--brand) 0%, var(--brand2) 60%, #fff 100%);
+      border: 1px solid var(--line); flex:0 0 52px;
+    }
+    .title { font-weight:800; font-size:18px; }
+    .subtitle { color:var(--muted); font-size:13px; }
+
+    /* TABS */
+    .tabs { display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 6px; }
     .tab {
-      padding:10px 12px; border-radius:999px; border:1px solid var(--line);
+      padding:10px 14px; border-radius:999px; border:1px solid var(--line);
       background:var(--card); color:var(--text); cursor:pointer; user-select:none;
+      font-weight:600;
     }
-    .tab[aria-selected="true"]{ border-color: var(--brand); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 30%, transparent); }
+    .tab[aria-selected="true"]{
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent);
+    }
 
-    .search { width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--text); }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:10px; }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; }
-    .card h3 { margin:0; font-size:14px; }
-    .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 8px; font-size:12px; border-radius:999px; border:1px dashed var(--line); color:var(--muted); }
+    /* SEARCH */
+    .search { width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--line);
+      background:var(--card); color:var(--text); box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+
+    /* CONTENT */
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:10px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:10px; }
+    .card h3 { margin:0; font-size:18px; font-weight:800; }
     .row { display:flex; gap:8px; flex-wrap:wrap; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:40px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--text); cursor:pointer; }
-    .btn.brand { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
-    .footer { color:var(--muted); font-size:12px; text-align:center; margin:16px 0 36px; }
-    .tag { font-size:12px; color:var(--muted); }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:flex-start; gap:8px;
+      min-height:42px; padding:0 14px; border-radius:12px; border:1px solid var(--line);
+      background:#ffffff; color:var(--text); cursor:pointer; font-weight:600; width:100%;
+    }
+    .btn.brand { border-color: var(--brand); background:#fff; box-shadow: inset 0 0 0 1px var(--brand); }
+    .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; font-size:12px; border-radius:999px; border:1px dashed var(--line); color:var(--muted); }
+
+    /* bottom sticky action */
+    .sticky-action { position: sticky; bottom: 0; background: linear-gradient(180deg, transparent, rgba(0,0,0,.02) 20%, rgba(0,0,0,.04) 60%); padding-top: 8px; margin-top: 8px; }
+    .footer { display:none !important; } /* удалено по запросу */
   </style>
 </head>
 <body>
@@ -68,36 +112,31 @@
     <div class="tabs" id="tabs"></div>
     <input id="search" class="search" placeholder="Поиск по заголовкам…" />
     <div id="content"></div>
-    <div class="footer">Мини‑апп работает внутри Telegram. Изменяйте контент прямо в коде (см. DATA внизу файла).</div>
   </div>
 
   <script>
-    // 1) ИНИЦИАЛИЗАЦИЯ TMA
+    // ===== 1) ИНИЦИАЛИЗАЦИЯ TMA =====
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
-      tg.expand();                             // полноэкранный режим, когда возможно
-      // Синхронизируем тему (светлая/тёмная) с Telegram
-      const theme = tg.colorScheme === 'light' ? 'light' : 'dark';
+      tg.expand();
+      const theme = tg.colorScheme === 'dark' ? 'dark' : 'light';
       document.documentElement.dataset.theme = theme;
-
-      // Кнопка на верхней панели — "Связаться"
       tg.MainButton.setParams({ text: 'Связаться', is_visible: true });
       tg.MainButton.onClick(() => openContact());
     }
 
-    // 2) ДАННЫЕ (РЕДАКТИРУЙТЕ ПОД СЕБЯ)
-    // — Подставьте реальные ссылки на ваши посты/голосовые/кейсы —
+    // ===== 2) ДАННЫЕ =====
     const DATA = {
-      channel: 'percent99_9', // username канала без @ — для t.me ссылки
+      channel: 'percent99_9',
       contact: {
-        username: 'percent99_9',       // ваш @username для связи в ЛС/боте
-        url: 'https://t.me/percent99_9'// можно заменить на ссылку на бота
+        username: 'Agavrichkova',
+        url: 'https://t.me/Agavrichkova'
       },
       tabs: [
         {
-          id: 'rubrics',
-          title: 'Рубрики',
+          id: 'ideas',
+          title: 'Идеи 99,9%',
           groups: [
             {
               tag: 'ИИ в команде',
@@ -107,7 +146,7 @@
               ]
             },
             {
-              tag: 'Деньги и бизнес‑мышление',
+              tag: 'Деньги и мышление',
               items: [
                 { title: 'Почему богатые платят меньше налогов, чем мы', link: 'https://t.me/percent99_9/95' },
                 { title: '99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес', link: 'https://t.me/percent99_9/96' }
@@ -122,29 +161,38 @@
           ]
         },
         {
-          id: 'podcast',
-          title: 'Подкаст (голосовые)',
+          id: 'cases',
+          title: 'Кейсы 0,1%',
           groups: [
             {
-              tag: 'Эпизоды',
+              tag: 'B2B-продажи',
               items: [
-                // Вариант А: просто открыть пост с войсом внутри канала
-                { title: 'Эпизод #1 · РУКИ 2025: как ИИ меняет команду', link: 'https://t.me/percent99_9/101' },
-                // Вариант Б: прямой mp3-файл (если храните аудио на GitHub/Static hosting)
-                // { title: 'Эпизод #2 · Аппскиллинг как стратегия', audio: 'https://<your>.github.io/tma-99-9/audio/ep2.mp3' }
+                { title: 'Potok: +18% уникальных клиентов и 15% ↓ потерь конверсии', link: 'https://t.me/percent99_9/102' },
+                { title: 'Автоматизация КП/договора → в 2 раза быстрее подписание', link: 'https://t.me/percent99_9/103' }
               ]
             }
           ]
         },
         {
-          id: 'cases',
-          title: 'Кейсы',
+          id: 'fails',
+          title: 'Грабли',
           groups: [
             {
-              tag: 'B2B‑продажи',
+              tag: 'Ошибки и выводы',
               items: [
-                { title: 'Potok: +18% уникальных клиентов и 15% ↓ потерь конверсии', link: 'https://t.me/percent99_9/102' },
-                { title: 'Автоматизация КП/договора → в 2 раза быстрее подписание', link: 'https://t.me/percent99_9/103' }
+                { title: 'Сломали онбординг: что пошло не так и как чинили', link: 'https://t.me/percent99_9/104' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'price',
+          title: 'Цена вопроса',
+          groups: [
+            {
+              tag: 'Экономика решений',
+              items: [
+                { title: 'Где прячется TCO при внедрении ИИ', link: 'https://t.me/percent99_9/105' }
               ]
             }
           ]
@@ -153,7 +201,7 @@
       ]
     };
 
-    // 3) ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ===== 3) ВСПОМОГАТЕЛЬНЫЕ =====
     const $ = sel => document.querySelector(sel);
     function openLink(url){
       if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
@@ -163,7 +211,7 @@
       openLink(url);
     }
 
-    // 4) ОТРИСОВКА ТАБОВ
+    // ===== 4) UI =====
     const tabsEl = $('#tabs');
     const contentEl = $('#content');
     const searchEl = $('#search');
@@ -181,14 +229,12 @@
         tabsEl.appendChild(b);
       });
     }
-
     function updateHash(){
       const url = new URL(location);
       url.hash = `tab=${activeTab}`;
       history.replaceState(null, '', url);
     }
 
-    // 5) ОТРИСОВКА КОНТЕНТА
     function draw(){
       renderTabs();
       const tab = DATA.tabs.find(x => x.id === activeTab) || DATA.tabs[0];
@@ -202,10 +248,14 @@
             <div class="row">
               <button class="btn brand" id="btnContact">Открыть чат в Telegram</button>
             </div>
-            <div class="tag">@${DATA.contact?.username || DATA.channel}</div>
+            <div class="tag">@Agavrichkova</div>
+          </div>
+          <div class="sticky-action">
+            <button class="btn brand" style="width:100%; height:48px; font-size:16px;" id="btnContact2">Связаться</button>
           </div>
         `;
         $('#btnContact').onclick = openContact;
+        $('#btnContact2').onclick = openContact;
         return;
       }
 
@@ -213,12 +263,12 @@
       wrap.className = 'grid';
 
       (tab.groups || []).forEach(g => {
-        // Фильтруем по поиску
         const items = (g.items || []).filter(it => !q || (it.title?.toLowerCase().includes(q)));
         if (!items.length) return;
 
         const card = document.createElement('div');
         card.className = 'card';
+
         const h = document.createElement('h3');
         h.textContent = g.tag;
         card.appendChild(h);
@@ -226,12 +276,14 @@
         items.forEach(it => {
           const row = document.createElement('div');
           row.className = 'row';
+
           if (it.audio) {
             const audio = document.createElement('audio');
             audio.controls = true; audio.preload = 'none'; audio.src = it.audio;
             audio.style.width = '100%';
             card.appendChild(audio);
           }
+
           const btn = document.createElement('button');
           btn.className = 'btn';
           btn.textContent = it.title;
@@ -242,7 +294,7 @@
 
         const badge = document.createElement('div');
         badge.className = 'badge';
-        badge.textContent = `${items.length} записи`; // лёгкий счётчик
+        badge.textContent = `${items.length} записи`;
         card.appendChild(badge);
 
         wrap.appendChild(card);
@@ -253,9 +305,7 @@
     }
 
     searchEl.addEventListener('input', draw);
-
-    // ПЕРВЫЙ РЕНДЕР
-    draw();
+    draw(); // первый рендер
   </script>
 </body>
 </html>
