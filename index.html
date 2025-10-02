@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>99,9% — мини‑апп</title>
+  <!-- Telegram Mini App JS -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0e0e10;           /* тёмная тема по умолчанию */
+      --card: #151518;
+      --text: #f2f2f3;
+      --muted: #a7a7ad;
+      --brand: #f3c76b;        /* тёплый акцент под эстетику канала */
+      --line: #242427;
+      --success: #16a34a;
+    }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --card: #f7f7f8;
+      --text: #151518;
+      --muted: #5b5b62;
+      --brand: #d39b16;
+      --line: #eaeaec;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    .app { max-width: 880px; margin: 0 auto; padding: 16px; }
+    .header { display:flex; gap:12px; align-items:center; padding:12px; border-radius:16px; background:var(--card); }
+    .avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--brand),transparent), #ddd; flex:0 0 44px; }
+    .title { font-weight:700; font-size:16px; }
+    .subtitle { color:var(--muted); font-size:12px; }
+
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 6px; }
+    .tab {
+      padding:10px 12px; border-radius:999px; border:1px solid var(--line);
+      background:var(--card); color:var(--text); cursor:pointer; user-select:none;
+    }
+    .tab[aria-selected="true"]{ border-color: var(--brand); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 30%, transparent); }
+
+    .search { width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--text); }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:10px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+    .card h3 { margin:0; font-size:14px; }
+    .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 8px; font-size:12px; border-radius:999px; border:1px dashed var(--line); color:var(--muted); }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; height:40px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--text); cursor:pointer; }
+    .btn.brand { border-color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
+    .footer { color:var(--muted); font-size:12px; text-align:center; margin:16px 0 36px; }
+    .tag { font-size:12px; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="header">
+      <div class="avatar" aria-hidden="true"></div>
+      <div>
+        <div class="title">Гавричкова | 99,9%</div>
+        <div class="subtitle">Навигация по рубрикам · Подкаст · Кейсы · Связь</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <input id="search" class="search" placeholder="Поиск по заголовкам…" />
+    <div id="content"></div>
+    <div class="footer">Мини‑апп работает внутри Telegram. Изменяйте контент прямо в коде (см. DATA внизу файла).</div>
+  </div>
+
+  <script>
+    // 1) ИНИЦИАЛИЗАЦИЯ TMA
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();                             // полноэкранный режим, когда возможно
+      // Синхронизируем тему (светлая/тёмная) с Telegram
+      const theme = tg.colorScheme === 'light' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+
+      // Кнопка на верхней панели — "Связаться"
+      tg.MainButton.setParams({ text: 'Связаться', is_visible: true });
+      tg.MainButton.onClick(() => openContact());
+    }
+
+    // 2) ДАННЫЕ (РЕДАКТИРУЙТЕ ПОД СЕБЯ)
+    // — Подставьте реальные ссылки на ваши посты/голосовые/кейсы —
+    const DATA = {
+      channel: 'percent99_9', // username канала без @ — для t.me ссылки
+      contact: {
+        username: 'percent99_9',       // ваш @username для связи в ЛС/боте
+        url: 'https://t.me/percent99_9'// можно заменить на ссылку на бота
+      },
+      tabs: [
+        {
+          id: 'rubrics',
+          title: 'Рубрики',
+          groups: [
+            {
+              tag: 'ИИ в команде',
+              items: [
+                { title: 'Как внедрить ИИ в командную работу (и не скатиться в игрушки)', link: 'https://t.me/percent99_9/99' },
+                { title: 'Кривая инноваций: где застревают 99,9% команд', link: 'https://t.me/percent99_9/98' }
+              ]
+            },
+            {
+              tag: 'Деньги и бизнес‑мышление',
+              items: [
+                { title: 'Почему богатые платят меньше налогов, чем мы', link: 'https://t.me/percent99_9/95' },
+                { title: '99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес', link: 'https://t.me/percent99_9/96' }
+              ]
+            },
+            {
+              tag: 'Анонсы/Инсайты',
+              items: [
+                { title: 'РУКИ от Яндекса: что беру в работу', link: 'https://t.me/percent99_9/97' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'podcast',
+          title: 'Подкаст (голосовые)',
+          groups: [
+            {
+              tag: 'Эпизоды',
+              items: [
+                // Вариант А: просто открыть пост с войсом внутри канала
+                { title: 'Эпизод #1 · РУКИ 2025: как ИИ меняет команду', link: 'https://t.me/percent99_9/101' },
+                // Вариант Б: прямой mp3-файл (если храните аудио на GitHub/Static hosting)
+                // { title: 'Эпизод #2 · Аппскиллинг как стратегия', audio: 'https://<your>.github.io/tma-99-9/audio/ep2.mp3' }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'cases',
+          title: 'Кейсы',
+          groups: [
+            {
+              tag: 'B2B‑продажи',
+              items: [
+                { title: 'Potok: +18% уникальных клиентов и 15% ↓ потерь конверсии', link: 'https://t.me/percent99_9/102' },
+                { title: 'Автоматизация КП/договора → в 2 раза быстрее подписание', link: 'https://t.me/percent99_9/103' }
+              ]
+            }
+          ]
+        },
+        { id: 'contact', title: 'Связь', groups: [] }
+      ]
+    };
+
+    // 3) ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    const $ = sel => document.querySelector(sel);
+    function openLink(url){
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank');
+    }
+    function openContact(){
+      const url = DATA.contact?.url || `https://t.me/${DATA.contact?.username || DATA.channel}`;
+      openLink(url);
+    }
+
+    // 4) ОТРИСОВКА ТАБОВ
+    const tabsEl = $('#tabs');
+    const contentEl = $('#content');
+    const searchEl = $('#search');
+    let activeTab = (new URLSearchParams(location.hash.slice(1))).get('tab') || DATA.tabs[0].id;
+
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      DATA.tabs.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'tab';
+        b.textContent = t.title;
+        b.setAttribute('role','tab');
+        b.setAttribute('aria-selected', t.id === activeTab);
+        b.onclick = () => { activeTab = t.id; updateHash(); draw(); };
+        tabsEl.appendChild(b);
+      });
+    }
+
+    function updateHash(){
+      const url = new URL(location);
+      url.hash = `tab=${activeTab}`;
+      history.replaceState(null, '', url);
+    }
+
+    // 5) ОТРИСОВКА КОНТЕНТА
+    function draw(){
+      renderTabs();
+      const tab = DATA.tabs.find(x => x.id === activeTab) || DATA.tabs[0];
+      searchEl.style.display = tab.id === 'contact' ? 'none' : 'block';
+      const q = (searchEl.value || '').trim().toLowerCase();
+
+      if (tab.id === 'contact') {
+        contentEl.innerHTML = `
+          <div class="card">
+            <h3>Связаться со мной</h3>
+            <div class="row">
+              <button class="btn brand" id="btnContact">Открыть чат в Telegram</button>
+            </div>
+            <div class="tag">@${DATA.contact?.username || DATA.channel}</div>
+          </div>
+        `;
+        $('#btnContact').onclick = openContact;
+        return;
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'grid';
+
+      (tab.groups || []).forEach(g => {
+        // Фильтруем по поиску
+        const items = (g.items || []).filter(it => !q || (it.title?.toLowerCase().includes(q)));
+        if (!items.length) return;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        const h = document.createElement('h3');
+        h.textContent = g.tag;
+        card.appendChild(h);
+
+        items.forEach(it => {
+          const row = document.createElement('div');
+          row.className = 'row';
+          if (it.audio) {
+            const audio = document.createElement('audio');
+            audio.controls = true; audio.preload = 'none'; audio.src = it.audio;
+            audio.style.width = '100%';
+            card.appendChild(audio);
+          }
+          const btn = document.createElement('button');
+          btn.className = 'btn';
+          btn.textContent = it.title;
+          btn.onclick = () => openLink(it.link || it.audio);
+          row.appendChild(btn);
+          card.appendChild(row);
+        });
+
+        const badge = document.createElement('div');
+        badge.className = 'badge';
+        badge.textContent = `${items.length} записи`; // лёгкий счётчик
+        card.appendChild(badge);
+
+        wrap.appendChild(card);
+      });
+
+      contentEl.innerHTML = '';
+      contentEl.appendChild(wrap);
+    }
+
+    searchEl.addEventListener('input', draw);
+
+    // ПЕРВЫЙ РЕНДЕР
+    draw();
+  </script>
+</body>
+</html>
