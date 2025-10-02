@@ -3,171 +3,301 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Навигация 99,9%</title>
+  <title>Навигация 99,9% — мини-апп</title>
 
-  <!-- Telegram Mini App -->
+  <!-- Telegram Mini App JS (не критично, но оставим) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Шрифты под эстетику сайта -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: linear-gradient(135deg, #ff9f1c 0%, #f0f0f0 100%);
-      --card: #f4f4f4;
-      --text: #111111;
-      --muted: #666666;
-      --brand: #ff9f1c;
-      --radius: 18px;
+    /* ====== ТЕМА/ПАЛИТРА (как на лендинге) ====== */
+    :root{
+      --bg-base: #eeeeef;             /* серый фон страницы */
+      --brand:  #ffb224;              /* тёплый оранжевый центр */
+      --brand-strong:#f7a21b;         /* плотный оранжевый */
+      --text:  #111111;               /* основной текст */
+      --muted: #63666a;               /* вторичный текст */
+      --card:  rgba(255,255,255,.72); /* карты слегка молочные */
+      --line:  rgba(17,17,17,.10);    /* деликатные бордеры */
+      --chip:  #ffffff;               /* фон табов/кнопок */
+      --chip-border: rgba(17,17,17,.16);
+      --chip-ring: rgba(247,162,27,.45);
+      --cta:   #2f6fce;               /* кнопка "Связаться" */
+      --cta-text:#ffffff;
     }
 
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
+    /* ====== БАЗА ====== */
+    html, body {height: 100%;}
+    body{
+      margin:0;
+      color:var(--text);
+      font: 15px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      /* Градиент как на сайте: оранжевый центр + серый фон */
+      background:
+        radial-gradient(1200px 900px at 65% 35%,
+          rgba(247,162,27, .95) 0%,
+          rgba(247,162,27, .75) 30%,
+          rgba(247,162,27, .35) 55%,
+          rgba(247,162,27, .15) 68%,
+          rgba(247,162,27, .08) 74%,
+          rgba(247,162,27, 0) 78%)
+        , var(--bg-base);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
+    .app{ max-width: 980px; margin: 0 auto; padding: 16px; }
+
+    /* ====== Шапка ====== */
+    .header{
+      display:flex; gap:16px; align-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.70));
+      border:1px solid var(--line);
+      border-radius:24px; padding:18px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.04);
+    }
+    .avatar{
+      width:64px; height:64px; border-radius:50%;
+      background:
+        radial-gradient(60px 60px at 60% 40%, var(--brand), rgba(255,255,255,.6)),
+        #f8d294;
+      border: 1px solid rgba(0,0,0,.06);
+      flex:0 0 64px;
+    }
+    .title{
+      font-family:"Montserrat", system-ui; font-weight:800; letter-spacing:.2px;
+      font-size:28px;
+    }
+    .subtitle{ color:var(--muted); margin-top:4px; }
+
+    /* ====== Табы ====== */
+    .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 10px; }
+    .tab{
+      background:var(--chip);
+      border:1px solid var(--chip-border);
+      border-radius:999px; padding:10px 14px;
+      font-weight:600; cursor:pointer; user-select:none;
+      transition: box-shadow .2s, border-color .2s, transform .05s;
+    }
+    .tab:active{ transform: translateY(1px); }
+    .tab[aria-selected="true"]{
+      border-color: var(--brand-strong);
+      box-shadow: 0 0 0 3px var(--chip-ring);
     }
 
-    .header {
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(18px);
-      border-radius: var(--radius);
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 20px;
+    /* ====== Поиск ====== */
+    .search{
+      width:100%; padding:12px 14px; border-radius:14px;
+      border:1px solid var(--line); background:rgba(255,255,255,.85);
+      outline:none;
     }
 
-    .header h1 {
-      margin: 10px 0 0;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 700;
+    /* ====== Секции/карты ====== */
+    .section{
+      background: var(--card); border:1px solid var(--line);
+      border-radius:22px; padding:16px; margin-top:14px;
+      backdrop-filter: blur(4px);
+    }
+    .section h2{
+      font-family:"Montserrat", system-ui; font-size:26px; margin:6px 8px 12px;
+      letter-spacing:.2px;
     }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 740px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
-    .tab {
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: #fff;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      transition: all 0.25s ease;
+    .card{
+      background:linear-gradient(180deg, #ffffffcc, #ffffffb3);
+      border:1px solid var(--line); border-radius:18px; padding:14px;
+      display:flex; flex-direction:column; gap:10px; min-height:130px;
     }
-    .tab.active {
-      background: var(--brand);
-      color: white;
-      border: 1px solid var(--brand);
+    .card h3{ margin:0 0 6px 0; font-size:18px; }
+    .pill{
+      display:inline-flex; align-items:center; justify-content:center;
+      border:1px dashed var(--line); border-radius:999px; padding:8px 10px;
+      color:var(--muted); font-size:13px;
     }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      height:44px; padding:0 16px; border-radius:12px; border:1px solid var(--line);
+      background:var(--chip); cursor:pointer; font-weight:600;
+    }
+    .btn.brand{
+      background:var(--cta); color:var(--cta-text);
+      border-color:rgba(0,0,0,.0);
+      box-shadow: 0 4px 18px rgba(47,111,206,.25);
+    }
+    .footer-space{ height:22px; }
 
-    .section {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    }
-
-    .section h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-    }
-
-    .card {
-      background: white;
-      border-radius: var(--radius);
-      padding: 15px;
-      margin-bottom: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 15px;
-    }
-
-    .button {
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 28px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.25s ease;
-    }
-    .button:hover {
-      background: #ff7f00;
-    }
+    /* скрытый сервисный футер — полностью убран */
+    .footer{ display:none; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="app" id="app">
+    <!-- Шапка -->
     <div class="header">
-      <h1>Гавричкова | 99,9%</h1>
-      <p>Навигация по рубрикам · Подкаст · Кейсы · Связь</p>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active">Рубрики</div>
-      <div class="tab">Подкаст</div>
-      <div class="tab">Кейсы</div>
-      <div class="tab">Связь</div>
-    </div>
-
-    <div class="section">
-      <h2>Идеи 99,9%</h2>
-      <div class="card">Как внедрить ИИ в командную работу (и не скатиться в игрушки)</div>
-      <div class="card">Кривая инноваций: где застревают 99,9% команд</div>
-    </div>
-
-    <div class="section">
-      <h2>Интересный рынок 0,1%</h2>
-      <div class="card">Почему богатые платят меньше налогов, чем мы</div>
-      <div class="card">99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес</div>
-    </div>
-
-    <div class="section">
-      <h2>Грабли</h2>
-      <div class="card">[пока пусто]</div>
-    </div>
-
-    <div class="section">
-      <h2>Цена вопроса</h2>
-      <div class="card">[пока пусто]</div>
-    </div>
-
-    <div class="section">
-      <h2>Связь</h2>
-      <div class="card">
-        <a href="https://t.me/Agavrichkova" target="_blank">@Agavrichkova</a>
+      <div class="avatar" aria-hidden="true"></div>
+      <div>
+        <div class="title">Гавричкова | 99,9%</div>
+        <div class="subtitle">Навигация по рубрикам · Подкаст · Кейсы · Связь</div>
       </div>
     </div>
 
-    <div class="footer">
-      <button class="button">Связаться</button>
-    </div>
+    <!-- Табы -->
+    <div class="tabs" id="tabs"></div>
+
+    <!-- Поиск (скрываем на "Связь") -->
+    <input id="search" class="search" placeholder="Поиск по заголовкам…"/>
+
+    <!-- Контент -->
+    <div id="content"></div>
+
+    <div class="footer-space"></div>
   </div>
+
+  <script>
+    // ========== Telegram init (оставим, но цвета фиксируем своей темой) ==========
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.ready(); tg.expand(); }
+
+    // ========== ДАННЫЕ (редактируешь только тут) ==========
+    const DATA = {
+      contact: { username: 'Agavrichkova', url: 'https://t.me/Agavrichkova' },
+      tabs: [
+        {
+          id:'rubrics', title:'Рубрики',
+          groups:[
+            {
+              tag:'Идеи 99,9%',
+              items:[
+                { title:'Как внедрить ИИ в командную работу (и не скатиться в игрушки)', link:'https://t.me/percent99_9/99' },
+                { title:'Кривая инноваций: где застревают 99,9% команд', link:'https://t.me/percent99_9/98' },
+              ]
+            },
+            {
+              tag:'Интересный рынок 0,1%',
+              items:[
+                { title:'Почему богатые платят меньше налогов, чем мы', link:'https://t.me/percent99_9/95' },
+                { title:'99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес', link:'https://t.me/percent99_9/96' },
+              ]
+            },
+            { tag:'Грабли', items:[] },
+            { tag:'Цена вопроса', items:[] }
+          ]
+        },
+        { id:'podcast', title:'Подкаст', groups:[ { tag:'Скоро', items:[] } ] },
+        { id:'cases',   title:'Кейсы',   groups:[ { tag:'Скоро', items:[] } ] },
+        { id:'contact', title:'Связь',   groups:[] }
+      ]
+    };
+
+    // ========== УТИЛЫ ==========
+    const $ = s => document.querySelector(s);
+    function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); }
+    function contactUrl(){ return DATA.contact?.url || `https://t.me/${DATA.contact?.username}`; }
+
+    // ========== РЕНДЕР ==========
+    const tabsEl = $('#tabs');
+    const contentEl = $('#content');
+    const searchEl = $('#search');
+    let activeTab = (new URLSearchParams(location.hash.slice(1))).get('tab') || 'rubrics';
+
+    function updateHash(){
+      const url = new URL(location); url.hash = `tab=${activeTab}`; history.replaceState(null,'',url);
+    }
+
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      DATA.tabs.forEach(t=>{
+        const b = document.createElement('button');
+        b.className = 'tab';
+        b.textContent = t.title;
+        b.setAttribute('role','tab');
+        b.setAttribute('aria-selected', String(t.id===activeTab));
+        b.onclick = ()=>{ activeTab = t.id; updateHash(); draw(); };
+        tabsEl.appendChild(b);
+      });
+    }
+
+    function emptyCard(label='Скоро'){
+      const c = document.createElement('div'); c.className='card';
+      c.innerHTML = `<h3>${label}</h3><div class="pill">Контент появится здесь</div>`;
+      return c;
+    }
+
+    function draw(){
+      renderTabs();
+      const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
+
+      // Поиск видим только в "Рубрики"
+      searchEl.style.display = (tab.id==='rubrics') ? 'block' : 'none';
+      const q = (searchEl.value || '').trim().toLowerCase();
+
+      if (tab.id==='contact'){
+        contentEl.innerHTML = `
+          <div class="section">
+            <h2>Связаться со мной</h2>
+            <div class="card" style="align-items:flex-start;gap:14px;">
+              <button class="btn brand" id="btnContact">Открыть чат в Telegram</button>
+              <div class="pill">@${DATA.contact?.username}</div>
+            </div>
+          </div>
+        `;
+        $('#btnContact').onclick = ()=>openLink(contactUrl());
+        return;
+      }
+
+      // контент секциями
+      const wrap = document.createElement('div');
+      wrap.className = '';
+
+      (tab.groups||[]).forEach(g=>{
+        const sec = document.createElement('div'); sec.className='section';
+        const h = document.createElement('h2'); h.textContent = g.tag; sec.appendChild(h);
+
+        const column = document.createElement('div'); column.className='grid';
+
+        // Фильтруем по поиску в "Рубриках"
+        let items = g.items || [];
+        if (tab.id==='rubrics' && q) items = items.filter(it => (it.title||'').toLowerCase().includes(q));
+
+        if (!items.length){
+          column.appendChild(emptyCard());
+        } else {
+          items.forEach(it=>{
+            const card = document.createElement('div'); card.className='card';
+            card.innerHTML = `<button class="btn" style="width:100%; height:auto; padding:12px; line-height:1.35;">${it.title}</button>`;
+            card.querySelector('button').onclick = ()=> openLink(it.link || it.audio);
+            column.appendChild(card);
+          });
+
+          // счётчик
+          const cnt = document.createElement('div');
+          cnt.className = 'pill';
+          cnt.style.width='100%'; cnt.style.justifyContent='center';
+          cnt.textContent = `${items.length} записи`;
+          sec.appendChild(column);
+          sec.appendChild(cnt);
+          wrap.appendChild(sec);
+          return;
+        }
+
+        sec.appendChild(column);
+        wrap.appendChild(sec);
+      });
+
+      contentEl.innerHTML = '';
+      contentEl.appendChild(wrap);
+    }
+
+    searchEl.addEventListener('input', draw);
+    draw();
+  </script>
 </body>
 </html>
+
+
