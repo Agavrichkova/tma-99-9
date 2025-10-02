@@ -1,78 +1,63 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Навигация 99,9% — мини-апп</title>
 
-  <!-- Telegram Mini App JS -->
+  <!-- Telegram Mini App JS (не критично, но оставим) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Шрифты -->
+  <!-- Шрифты под эстетику сайта -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== ПАЛИТРА и ФОН (фото + градиент поверх) ===== */
+    /* ====== ТЕМА/ПАЛИТРА (как на лендинге) ====== */
     :root{
-      /* Путь к вашему фону (положите файл в /assets/nav-bg.jpg) */
-      --bg-image: url("./assets/nav-bg.jpg");
-
-      --bg-base: #eeeeef;            /* серый фон по краям */
-      --brand:  #ffb224;             /* тёплый оранжевый центр */
-      --brand-strong:#f7a21b;
-      --text:  #111111;
-      --muted: #63666a;
-
-      /* Карточки/плашки теперь более серые */
-      --section: rgba(245,246,247,.78);
-      --card:    linear-gradient(180deg, rgba(255,255,255,.85), rgba(240,242,244,.82));
-      --line:    rgba(17,17,17,.10);
-
-      --chip:  #ffffff;
+      --bg-base: #eeeeef;             /* серый фон страницы */
+      --brand:  #ffb224;              /* тёплый оранжевый центр */
+      --brand-strong:#f7a21b;         /* плотный оранжевый */
+      --text:  #111111;               /* основной текст */
+      --muted: #63666a;               /* вторичный текст */
+      --card:  rgba(255,255,255,.72); /* карты слегка молочные */
+      --line:  rgba(17,17,17,.10);    /* деликатные бордеры */
+      --chip:  #ffffff;               /* фон табов/кнопок */
       --chip-border: rgba(17,17,17,.16);
-      --chip-ring:   rgba(247,162,27,.45);
-
-      --cta:      #2f6fce;
-      --cta-text: #ffffff;
+      --chip-ring: rgba(247,162,27,.45);
+      --cta:   #2f6fce;               /* кнопка "Связаться" */
+      --cta-text:#ffffff;
     }
 
-    html, body { height:100%; }
+    /* ====== БАЗА ====== */
+    html, body {height: 100%;}
     body{
       margin:0;
       color:var(--text);
       font: 15px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      /* Слой 1: фото */
-      background-image:
-        var(--bg-image),
+      /* Градиент как на сайте: оранжевый центр + серый фон */
+      background:
         radial-gradient(1200px 900px at 65% 35%,
-          rgba(247,162,27,.95) 0%,
-          rgba(247,162,27,.75) 30%,
-          rgba(247,162,27,.35) 55%,
-          rgba(247,162,27,.18) 68%,
-          rgba(247,162,27,.10) 74%,
-          rgba(247,162,27, 0) 78%),
-        var(--bg-base);   /* подложка */
-      background-size: cover, auto, auto;
-      background-position: center, center, center;
-      background-repeat: no-repeat, no-repeat, no-repeat;
-
-      /* Лёгкое затемнение фото для читабельности */
-      /* (эффект «размытия» достигаем через блюр бэкдропа на блоках + мягкое затемнение) */
-      position: relative;
+          rgba(247,162,27, .95) 0%,
+          rgba(247,162,27, .75) 30%,
+          rgba(247,162,27, .35) 55%,
+          rgba(247,162,27, .15) 68%,
+          rgba(247,162,27, .08) 74%,
+          rgba(247,162,27, 0) 78%)
+        , var(--bg-base);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
 
     .app{ max-width: 980px; margin: 0 auto; padding: 16px; }
 
-    /* ===== Шапка ===== */
+    /* ====== Шапка ====== */
     .header{
       display:flex; gap:16px; align-items:center;
-      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.72));
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.70));
       border:1px solid var(--line);
       border-radius:24px; padding:18px;
-      backdrop-filter: blur(8px) saturate(1.05);
-      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.04);
     }
     .avatar{
       width:64px; height:64px; border-radius:50%;
@@ -83,85 +68,71 @@
       flex:0 0 64px;
     }
     .title{
-      font-family:"Montserrat", system-ui;
-      font-weight:800; letter-spacing:.2px; font-size:28px;
+      font-family:"Montserrat", system-ui; font-weight:800; letter-spacing:.2px;
+      font-size:28px;
     }
     .subtitle{ color:var(--muted); margin-top:4px; }
 
-    /* ===== Табы ===== */
+    /* ====== Табы ====== */
     .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 10px; }
     .tab{
       background:var(--chip);
       border:1px solid var(--chip-border);
       border-radius:999px; padding:10px 14px;
       font-weight:600; cursor:pointer; user-select:none;
-      transition: box-shadow .2s, border-color .2s, transform .05s, background .2s;
-      backdrop-filter: blur(2px);
+      transition: box-shadow .2s, border-color .2s, transform .05s;
     }
     .tab:active{ transform: translateY(1px); }
     .tab[aria-selected="true"]{
       border-color: var(--brand-strong);
       box-shadow: 0 0 0 3px var(--chip-ring);
-      background:#fffdf8;
     }
 
-    /* ===== Поиск ===== */
+    /* ====== Поиск ====== */
     .search{
       width:100%; padding:12px 14px; border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.85);
+      border:1px solid var(--line); background:rgba(255,255,255,.85);
       outline:none;
-      backdrop-filter: blur(4px);
     }
 
-    /* ===== Секции/карты ===== */
+    /* ====== Секции/карты ====== */
     .section{
-      background: var(--section);
-      border:1px solid var(--line);
+      background: var(--card); border:1px solid var(--line);
       border-radius:22px; padding:16px; margin-top:14px;
-      backdrop-filter: blur(6px) saturate(1.05);
-      box-shadow: 0 8px 28px rgba(0,0,0,.05);
+      backdrop-filter: blur(4px);
     }
     .section h2{
-      font-family:"Montserrat", system-ui;
-      font-size:26px; margin:6px 8px 12px;
+      font-family:"Montserrat", system-ui; font-size:26px; margin:6px 8px 12px;
       letter-spacing:.2px;
     }
 
     .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
-    @media (min-width: 740px){ .grid{ grid-template-columns:1fr 1fr 1fr; } }
+    @media (min-width: 740px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
     .card{
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius:18px; padding:14px;
+      background:linear-gradient(180deg, #ffffffcc, #ffffffb3);
+      border:1px solid var(--line); border-radius:18px; padding:14px;
       display:flex; flex-direction:column; gap:10px; min-height:130px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.04);
     }
     .card h3{ margin:0 0 6px 0; font-size:18px; }
-
     .pill{
       display:inline-flex; align-items:center; justify-content:center;
       border:1px dashed var(--line); border-radius:999px; padding:8px 10px;
       color:var(--muted); font-size:13px;
-      background:rgba(255,255,255,.75);
-      backdrop-filter: blur(2px);
     }
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
       height:44px; padding:0 16px; border-radius:12px; border:1px solid var(--line);
       background:var(--chip); cursor:pointer; font-weight:600;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s;
     }
-    .btn:hover{ box-shadow:0 6px 18px rgba(0,0,0,.08); }
-    .btn:active{ transform: translateY(1px); }
     .btn.brand{
       background:var(--cta); color:var(--cta-text);
-      border-color:transparent;
-      box-shadow: 0 6px 22px rgba(47,111,206,.30);
+      border-color:rgba(0,0,0,.0);
+      box-shadow: 0 4px 18px rgba(47,111,206,.25);
     }
-
     .footer-space{ height:22px; }
+
+    /* скрытый сервисный футер — полностью убран */
     .footer{ display:none; }
   </style>
 </head>
@@ -179,7 +150,7 @@
     <!-- Табы -->
     <div class="tabs" id="tabs"></div>
 
-    <!-- Поиск (только для "Рубрики") -->
+    <!-- Поиск (скрываем на "Связь") -->
     <input id="search" class="search" placeholder="Поиск по заголовкам…"/>
 
     <!-- Контент -->
@@ -189,10 +160,11 @@
   </div>
 
   <script>
+    // ========== Telegram init (оставим, но цвета фиксируем своей темой) ==========
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
-    /* ==== ДАННЫЕ ==== */
+    // ========== ДАННЫЕ (редактируешь только тут) ==========
     const DATA = {
       contact: { username: 'Agavrichkova', url: 'https://t.me/Agavrichkova' },
       tabs: [
@@ -223,12 +195,12 @@
       ]
     };
 
-    /* ==== Утилиты ==== */
+    // ========== УТИЛЫ ==========
     const $ = s => document.querySelector(s);
     function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); }
     function contactUrl(){ return DATA.contact?.url || `https://t.me/${DATA.contact?.username}`; }
 
-    /* ==== Рендер ==== */
+    // ========== РЕНДЕР ==========
     const tabsEl = $('#tabs');
     const contentEl = $('#content');
     const searchEl = $('#search');
@@ -261,7 +233,7 @@
       renderTabs();
       const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
 
-      // Поиск — только в "Рубрики"
+      // Поиск видим только в "Рубрики"
       searchEl.style.display = (tab.id==='rubrics') ? 'block' : 'none';
       const q = (searchEl.value || '').trim().toLowerCase();
 
@@ -279,7 +251,9 @@
         return;
       }
 
+      // контент секциями
       const wrap = document.createElement('div');
+      wrap.className = '';
 
       (tab.groups||[]).forEach(g=>{
         const sec = document.createElement('div'); sec.className='section';
@@ -287,6 +261,7 @@
 
         const column = document.createElement('div'); column.className='grid';
 
+        // Фильтруем по поиску в "Рубриках"
         let items = g.items || [];
         if (tab.id==='rubrics' && q) items = items.filter(it => (it.title||'').toLowerCase().includes(q));
 
@@ -300,6 +275,7 @@
             column.appendChild(card);
           });
 
+          // счётчик
           const cnt = document.createElement('div');
           cnt.className = 'pill';
           cnt.style.width='100%'; cnt.style.justifyContent='center';
@@ -323,3 +299,5 @@
   </script>
 </body>
 </html>
+
+
