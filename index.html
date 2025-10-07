@@ -8,136 +8,137 @@
   <!-- Telegram Mini App -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Шрифты -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* фон: если нужен файл — поставь url('assets/nav-bg.jpg'), иначе оставь none */
       --bg-image: none;
-
-      --bg-base:#eeeeef;
-      --brand:#ffb224;
+      --bg-base: #eeeeef;
+      --brand:  #ffb224;
       --brand-strong:#f7a21b;
-      --text:#111111;
-      --muted:#63666a;
-
-      --card:rgba(255,255,255,.72);
-      --line:rgba(17,17,17,.10);
-
-      --chip:#ffffff;
-      --chip-border:rgba(17,17,17,.16);
-      --chip-ring:rgba(247,162,27,.45);
-
-      --cta:#2f6fce;
+      --text:  #111111;
+      --muted: #63666a;
+      --card:  rgba(255,255,255,.72);
+      --line:  rgba(17,17,17,.10);
+      --chip:  #ffffff;
+      --chip-border: rgba(17,17,17,.16);
+      --chip-ring: rgba(247,162,27,.45);
+      --cta:   #2f6fce;
       --cta-text:#ffffff;
+      --nav-bg: rgba(255,255,255,.92);
+      --nav-border: rgba(17,17,17,.10);
+      --nav-active: #111111;
+      --nav-muted: #6c6f75;
 
-      --nav-bg:rgba(255,255,255,.92);
-      --nav-border:rgba(17,17,17,.10);
-      --nav-active:#111111;
-      --nav-muted:#6c6f75;
+      /* для продуктового лендинга */
+      --rs-card:#fffdf9;
+      --rs-card-border:#e9dccb;
+      --rs-chip:#f5efe7;
     }
 
-    html,body{height:100%}
+    html, body {height: 100%;}
     body{
-      margin:0;color:var(--text);
-      font:15px/1.5 "Manrope",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;
-      background-image:
-        var(--bg-image),
-        radial-gradient(1200px 900px at 65% 35%,
-          rgba(247,162,27,.95) 0%,
-          rgba(247,162,27,.75) 30%,
-          rgba(247,162,27,.35) 55%,
-          rgba(247,162,27,.15) 68%,
-          rgba(247,162,27,.08) 74%,
-          rgba(247,162,27,0) 78%);
-      background-color:var(--bg-base);
-      background-size:cover,auto;
+      margin:0;
+      color:var(--text);
+      font: 15px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      background-image: var(--bg-image), radial-gradient(1200px 900px at 65% 35%,
+          rgba(247,162,27, .95) 0%,
+          rgba(247,162,27, .75) 30%,
+          rgba(247,162,27, .35) 55%,
+          rgba(247,162,27, .15) 68%,
+          rgba(247,162,27, .08) 74%,
+          rgba(247,162,27, 0) 78%), none;
+      background-size: cover, auto;
       background-repeat:no-repeat;
-      background-attachment:fixed;
+      background-attachment: fixed;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
 
-    .app{max-width:980px;margin:0 auto;padding:16px 16px 88px}
+    .app{ max-width: 980px; margin: 0 auto; padding: 16px 16px 88px; }
 
-    /* Шапка */
+    /* Header */
     .header{
-      display:flex;gap:16px;align-items:center;
+      display:flex; gap:16px; align-items:center;
       background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.70));
       border:1px solid var(--line);
-      border-radius:24px;padding:18px;
+      border-radius:24px; padding:18px;
       backdrop-filter: blur(6px);
-      box-shadow:0 8px 30px rgba(0,0,0,.04);
+      box-shadow: 0 8px 30px rgba(0,0,0,.04);
     }
-    .avatar{
-      width:64px;height:64px;border-radius:50%;
-      background:
-        radial-gradient(60px 60px at 60% 40%, var(--brand), rgba(255,255,255,.6)),
-        #f8d294;
-      border:1px solid rgba(0,0,0,.06);flex:0 0 64px;
+    .avatar{ width:64px; height:64px; border-radius:50%;
+      background: radial-gradient(60px 60px at 60% 40%, var(--brand), rgba(255,255,255,.6)), #f8d294;
+      border: 1px solid rgba(0,0,0,.06);
+      flex:0 0 64px;
     }
-    .title{font-family:"Montserrat",system-ui;font-weight:800;letter-spacing:.2px;font-size:28px}
-    .subtitle{color:var(--muted);margin-top:4px}
+    .title{ font-family:"Montserrat"; font-weight:800; letter-spacing:.2px; font-size:28px; }
+    .subtitle{ color:var(--muted); margin-top:4px; }
 
-    /* Верхние чипы (быстрые вкладки) */
-    .tabs{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 10px}
+    /* Top chips */
+    .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 10px; }
     .tab{
-      background:var(--chip);border:1px solid var(--chip-border);
-      border-radius:999px;padding:10px 14px;font-weight:600;cursor:pointer;user-select:none;
-      transition:box-shadow .2s,border-color .2s,transform .05s;
+      background:var(--chip); border:1px solid var(--chip-border);
+      border-radius:999px; padding:10px 14px; font-weight:600; cursor:pointer; user-select:none;
+      transition: box-shadow .2s, border-color .2s, transform .05s;
     }
-    .tab:active{transform:translateY(1px)}
-    .tab[aria-selected="true"]{border-color:var(--brand-strong);box-shadow:0 0 0 3px var(--chip-ring)}
+    .tab:active{ transform: translateY(1px); }
+    .tab[aria-selected="true"]{ border-color: var(--brand-strong); box-shadow: 0 0 0 3px var(--chip-ring); }
 
-    /* Поиск */
-    .search{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.85);outline:none}
+    /* Search */
+    .search{ width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--line);
+      background:rgba(255,255,255,.85); outline:none; }
 
-    /* Секции/карточки */
-    .section{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-top:14px;backdrop-filter: blur(4px)}
-    .section h2{font-family:"Montserrat",system-ui;font-size:26px;margin:6px 8px 12px;letter-spacing:.2px}
+    /* Sections / cards */
+    .section{ background: var(--card); border:1px solid var(--line); border-radius:22px; padding:16px; margin-top:14px; backdrop-filter: blur(4px); }
+    .section h2{ font-family:"Montserrat"; font-size:26px; margin:6px 8px 12px; letter-spacing:.2px; }
 
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:740px){.grid{grid-template-columns:1fr 1fr 1fr}}
+    .grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 740px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
-    .card{
-      background:linear-gradient(180deg,#ffffffcc,#ffffffb3);
-      border:1px solid var(--line);border-radius:18px;padding:14px;
-      display:flex;flex-direction:column;gap:10px;min-height:130px;
-    }
-    .card h3{margin:0 0 6px 0;font-size:18px}
-    .pill{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:999px;padding:8px 10px;color:var(--muted);font-size:13px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--chip);cursor:pointer;font-weight:600}
-    .btn.brand{background:var(--cta);color:var(--cta-text);border-color:transparent;box-shadow:0 4px 18px rgba(47,111,206,.25)}
+    .card{ background:linear-gradient(180deg, #ffffffcc, #ffffffb3); border:1px solid var(--line); border-radius:18px; padding:14px; display:flex; flex-direction:column; gap:10px; min-height:130px; }
+    .pill{ display:inline-flex; align-items:center; justify-content:center; border:1px dashed var(--line); border-radius:999px; padding:8px 10px; color:var(--muted); font-size:13px; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; height:44px; padding:0 16px; border-radius:12px; border:1px solid var(--line); background:var(--chip); cursor:pointer; font-weight:600; }
+    .btn.brand{ background:var(--cta); color:var(--cta-text); border-color:transparent; box-shadow: 0 4px 18px rgba(47,111,206,.25); }
 
-    /* Локальный стиль для продукта */
-    .heroWrap{background:linear-gradient(180deg,#ffffffd8,#ffffffb8);border:1px solid var(--line);border-radius:22px;padding:22px 18px;margin-bottom:14px;backdrop-filter:saturate(110%) blur(4px)}
-    .heroTitle{font-family:"Montserrat",system-ui;font-weight:800;letter-spacing:.2px;font-size:clamp(28px,5.6vw,44px);line-height:1.08;margin:6px 0 10px}
-    .heroKicker{color:var(--muted);font-size:14px;margin-bottom:12px}
-    .heroSub{color:#3a3a3a;font-size:16px;margin:0 0 14px}
-    .split{display:grid;gap:12px}
-    @media(min-width:880px){.split{grid-template-columns:1fr 1fr}}
-    .kTag{display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#5a5a5a}
-    .kpi{font-weight:800;color:var(--brand-strong)}
-    .ol{margin:8px 0 0 20px}.ol li{margin:6px 0}
-    .backBtn{display:inline-flex;gap:8px;align-items:center;height:40px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--chip);font-weight:600}
+    /* Bottom nav */
+    .nav{ position:fixed; left:0; right:0; bottom:0; background: var(--nav-bg); border-top:1px solid var(--nav-border); backdrop-filter: blur(10px); z-index: 50; }
+    .nav-wrap{ max-width:980px; margin:0 auto; padding:8px 12px 10px; display:flex; justify-content:space-between; gap:8px; }
+    .nav-btn{ flex:1 1 0; display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 6px; border-radius:12px; border:1px solid transparent; background:transparent; cursor:pointer; user-select:none; font-weight:600; color:var(--nav-muted); transition:.2s; }
+    .nav-btn:active{ transform: translateY(1px); }
+    .nav-btn.active{ color:var(--nav-active); background:#fff; border-color:var(--nav-border); box-shadow: 0 6px 18px rgba(0,0,0,.06); }
+    .nav-ico{ font-size:18px; line-height:1; }
+    .nav-txt{ font-size:12px; }
 
-    /* Нижняя навигация */
-    .nav{position:fixed;left:0;right:0;bottom:0;background:var(--nav-bg);border-top:1px solid var(--nav-border);backdrop-filter: blur(10px);z-index:50}
-    .nav-wrap{max-width:980px;margin:0 auto;padding:8px 12px 10px;display:flex;justify-content:space-between;gap:8px}
-    .nav-btn{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;border:1px solid transparent;background:transparent;cursor:pointer;user-select:none;font-weight:600;color:var(--nav-muted);transition:background .2s,color .2s,border-color .2s,transform .05s}
-    .nav-btn:active{transform:translateY(1px)}
-    .nav-btn.active{color:var(--nav-active);background:#fff;border-color:var(--nav-border);box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    .nav-ico{font-size:18px;line-height:1}
-    .nav-txt{font-size:12px}
+    .footer-space{ height:22px; }
+    .footer{ display:none; }
 
-    .footer-space{height:22px}
-    .footer{display:none}
+    /* ===== RS360 — экран продукта внутри аппа ===== */
+    .rs-wrap{ background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.76)); border:1px solid var(--line);
+      border-radius:26px; padding:18px; margin-top:14px; }
+    .rs-head{ display:flex; gap:14px; align-items:center; }
+    .rs-badge{ font-size:13px; color:var(--muted); background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:6px 10px; }
+    .rs-title{ font-family:"Montserrat"; font-weight:800; letter-spacing:.2px; font-size:36px; line-height:1.05; margin:6px 0 4px; }
+    .rs-sub{ color:#585b60; font-size:16px; }
+    .rs-cta{ margin-top:16px; }
+    .rs-hr{ height:6px; border-radius:6px; background:linear-gradient(90deg, #e2a12a, #f8c16a 40%, transparent 40%); margin:18px 0 2px; }
+
+    .rs-section{ background:var(--rs-card); border:1px solid var(--rs-card-border); border-radius:22px; padding:16px; margin:16px 0; }
+    .rs-h2{ font-family:"Montserrat"; font-size:28px; margin:4px 8px 12px; letter-spacing:.2px; }
+    .rs-grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 740px){ .rs-grid{ grid-template-columns:1fr 1fr; } }
+    .rs-card{ background:#fff; border:1px solid #e7e2d8; border-radius:18px; padding:14px 16px; }
+    .rs-card h3{ margin:0 0 6px; font-size:18px; }
+    .rs-ul{ margin:10px 0 0 0; padding-left:18px; }
+    .rs-ul li{ margin:6px 0; }
+    .rs-chip{ display:inline-flex; align-items:center; gap:8px; background:var(--rs-chip); border:1px dashed #d8c9b1; color:#6a604f; border-radius:999px; padding:8px 12px; font-size:13px; }
+
+    .back{ display:inline-flex; align-items:center; gap:10px; height:40px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background:#fff; font-weight:600; cursor:pointer; }
   </style>
 </head>
 <body>
   <div class="app" id="app">
-    <!-- Шапка -->
+    <!-- Header -->
     <div class="header">
       <div class="avatar" aria-hidden="true"></div>
       <div>
@@ -146,19 +147,19 @@
       </div>
     </div>
 
-    <!-- Вкладки-чипы -->
+    <!-- Top chips -->
     <div class="tabs" id="tabs"></div>
 
-    <!-- Поиск (только для «Рубрики») -->
+    <!-- Search (only on "Рубрики") -->
     <input id="search" class="search" placeholder="Поиск по заголовкам…"/>
 
-    <!-- Контент -->
+    <!-- Main content -->
     <div id="content"></div>
 
     <div class="footer-space"></div>
   </div>
 
-  <!-- Нижняя навигация -->
+  <!-- Bottom navigation -->
   <nav class="nav">
     <div class="nav-wrap">
       <button class="nav-btn" data-tab="rubrics"><span class="nav-ico">🏷️</span><span class="nav-txt">Рубрики</span></button>
@@ -174,80 +175,203 @@
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
-    // ДАННЫЕ
+    // ===== DATA =====
     const DATA = {
       contact: { username: 'Agavrichkova', url: 'https://t.me/Agavrichkova' },
       tabs: [
-        {
-          id:'rubrics', title:'Рубрики',
-          groups:[
-            {
-              tag:'Идеи 99,9%',
-              items:[
-                { title:'Как внедрить ИИ в командную работу (и не скатиться в игрушки)', link:'https://t.me/percent99_9/99' },
-                { title:'Кривая инноваций: где застревают 99,9% команд', link:'https://t.me/percent99_9/98' },
-              ]
-            },
-            {
-              tag:'Интересный рынок 0,1%',
-              items:[
-                { title:'Почему богатые платят меньше налогов, чем мы', link:'https://t.me/percent99_9/95' },
-                { title:'99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес', link:'https://t.me/percent99_9/96' },
-              ]
-            },
-            { tag:'Грабли', items:[] },
-            { tag:'Цена вопроса', items:[] }
-          ]
-        },
+        { id:'rubrics',  title:'Рубрики',  groups:[
+          { tag:'Идеи 99,9%', items:[
+            { title:'Как внедрить ИИ в командную работу (и не скатиться в игрушки)', link:'https://t.me/percent99_9/99' },
+            { title:'Кривая инноваций: где застревают 99,9% команд', link:'https://t.me/percent99_9/98' },
+          ]},
+          { tag:'Интересный рынок 0,1%', items:[
+            { title:'Почему богатые платят меньше налогов, чем мы', link:'https://t.me/percent99_9/95' },
+            { title:'99,9% берут ипотеку на 20 лет. 0,1% покупают через бизнес', link:'https://t.me/percent99_9/96' },
+          ]},
+          { tag:'Грабли', items:[] },
+          { tag:'Цена вопроса', items:[] },
+        ]},
         { id:'podcast',  title:'Подкаст',  groups:[ { tag:'Скоро', items:[] } ] },
         { id:'cases',    title:'Кейсы',    groups:[ { tag:'Скоро', items:[] } ] },
         { id:'products', title:'Продукты', groups:[
-            { tag:'Рекомендовано', items:[ { title:'Revenue Sprint 360°', view:'rs360' } ] }
-          ]
-        },
-        { id:'contact',  title:'Связь',    groups:[] }
+          { tag:'Рекомендовано', items:[
+            { id:'rs360', title:'Revenue Sprint 360°', type:'internal' },
+          ]},
+        ]},
+        { id:'contact',  title:'Связь',    groups:[] },
       ]
     };
 
-    // УТИЛЫ
-    const $ = s => document.querySelector(s);
-    const $all = s => Array.from(document.querySelectorAll(s));
-    function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank'); }
+    // ===== RS360 VIEW (вшит внутрь аппа) =====
+    const RS360_VIEW_HTML = `
+      <div class="rs-wrap">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <button class="back" onclick="setView(null)">← Назад</button>
+          <span class="rs-badge">Анна Гавричкова · продуктовый спринт</span>
+        </div>
+
+        <div class="rs-head">
+          <div class="avatar" aria-hidden="true" style="width:56px;height:56px;"></div>
+          <div>
+            <div class="rs-title">Revenue Sprint 360°</div>
+            <div class="rs-sub">14 дней, чтобы выжать +выручку из текущего потока — без роста бюджета и штата.</div>
+          </div>
+        </div>
+
+        <div class="rs-cta">
+          <button class="btn brand" onclick="openLink('https://t.me/Agavrichkova')">Написать Анне в Telegram</button>
+          <span class="rs-chip" style="margin-left:12px;">Внутри мини-аппа</span>
+        </div>
+
+        <div class="rs-hr"></div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Что это</div>
+          <div class="rs-grid">
+            <div class="rs-card">
+              <h3>Быстрая монетизация</h3>
+              <div>Диагностика, пересборка офферов и маршрутов, реактивация базы, допродажи — первые оплаты обычно в 10–14 дней.</div>
+            </div>
+            <div class="rs-card">
+              <h3>Управляемая воронка</h3>
+              <div>Прозрачные точки контроля, цикл сделки, скрипты follow-up, план активностей на 4 недели вперёд.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Результаты спринта</div>
+          <div class="rs-grid">
+            <div class="rs-card">
+              <h3>+20% выручки</h3>
+              <div>или эквивалентный прирост за счёт ускорения цикла сделки и роста конверсии на ключевых шагах.</div>
+            </div>
+            <div class="rs-card">
+              <h3>Первые деньги за 2 недели</h3>
+              <div>Реактивация базы и быстрые офферы → оплаченные встречи/счета.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Программа (коротко)</div>
+          <div class="rs-grid">
+            <div class="rs-card">
+              <h3>Неделя 1</h3>
+              <ul class="rs-ul">
+                <li>Диагностика текущей воронки и офферов</li>
+                <li>Чек-лист узких мест и быстрых рычагов</li>
+                <li>Реактивация базы: сегменты, скрипты, план</li>
+                <li>Первый быстрый оффер и гипотезы</li>
+              </ul>
+            </div>
+            <div class="rs-card">
+              <h3>Неделя 2</h3>
+              <ul class="rs-ul">
+                <li>Систематизация: цикл сделки, follow-up</li>
+                <li>Маршруты: from lead to paid, точки контроля</li>
+                <li>Упаковка быстрых предложений</li>
+                <li>Запуск допродаж/кросс-селла</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Формат</div>
+          <div class="rs-grid">
+            <div class="rs-card">
+              <h3>Коммуникации</h3>
+              <ul class="rs-ul">
+                <li>2 созвона в неделю (постановка и разбор)</li>
+                <li>Ежедневный async-контакт в Telegram</li>
+                <li>Материалы/шаблоны/скрипты включены</li>
+              </ul>
+            </div>
+            <div class="rs-card">
+              <h3>Артефакты на выходе</h3>
+              <ul class="rs-ul">
+                <li>Оформленные офферы и сценарии</li>
+                <li>Карта воронки и точки контроля</li>
+                <li>Список быстрых рычагов на 4 недели</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Кому подходит</div>
+          <ul class="rs-ul">
+            <li>B2B и сервисы, где продажи идут через встречи/счета</li>
+            <li>Есть лид-поток, но «проседает» скорость/конверсия</li>
+            <li>Нужно быстро показать деньги без наращивания штата</li>
+          </ul>
+        </div>
+
+        <div class="rs-section">
+          <div class="rs-h2">Условия</div>
+          <div class="rs-grid">
+            <div class="rs-card">
+              <h3>Срок и формат</h3>
+              <div>2 недели интенсива + 2 недели лёгкого сопровождения.</div>
+            </div>
+            <div class="rs-card">
+              <h3>Стоимость</h3>
+              <div>Обсуждается на созвоне: фикс + бонус от результата/этапа. Напиши в Telegram — отправлю детали.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rs-section" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+          <div class="rs-chip">Готова показать быстрые деньги на текущем потоке</div>
+          <button class="btn brand" onclick="openLink('https://t.me/Agavrichkova')">Написать Анне в Telegram</button>
+        </div>
+      </div>
+    `;
+
+    // ===== helpers =====
+    const $  = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); }
     function contactUrl(){ return DATA.contact?.url || `https://t.me/${DATA.contact?.username}`; }
 
-    // РОУТИНГ (hash)
     const tabsEl = $('#tabs');
     const contentEl = $('#content');
     const searchEl = $('#search');
-    const navButtons = $all('.nav-btn');
+    const navButtons = $$('.nav-btn');
 
-    const getHash = () => new URLSearchParams(location.hash.slice(1));
-    const setHash = (obj) => {
-      const p = new URLSearchParams(obj);
+    // routing state
+    const urlParams = new URLSearchParams(location.hash.slice(1));
+    let activeTab = urlParams.get('tab') || 'rubrics';
+    let activeView = urlParams.get('view'); // для продуктов (rs360 и т.п.)
+
+    function updateHash(){
       const url = new URL(location);
+      const p = new URLSearchParams();
+      p.set('tab', activeTab);
+      if (activeTab==='products' && activeView) p.set('view', activeView);
       url.hash = p.toString();
       history.replaceState(null,'',url);
-    };
-
-    let activeTab = getHash().get('tab') || 'rubrics';
-    let productView = getHash().get('view') || ''; // для внутренних страниц продуктов
-
-    function setTab(id, extras = {}){
-      activeTab = id;
-      productView = extras.view || '';
-      setHash({ tab: activeTab, ...(productView ? {view:productView} : {}) });
-      draw();
-      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
-      $all('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === activeTab)));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ВЕРХНИЕ ТАБЫ
+    function setTab(id){
+      activeTab = id;
+      if (id!=='products') activeView = null;
+      updateHash();
+      draw();
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+      $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function setView(view){ activeView = view; updateHash(); draw(); window.scrollTo({top:0, behavior:'smooth'}); }
+
     function renderTabs(){
       tabsEl.innerHTML = '';
       DATA.tabs.forEach(t=>{
         const b = document.createElement('button');
-        b.className='tab'; b.dataset.tab=t.id; b.textContent=t.title;
+        b.className = 'tab';
+        b.dataset.tab = t.id;
+        b.textContent = t.title;
         b.setAttribute('role','tab');
         b.setAttribute('aria-selected', String(t.id===activeTab));
         b.onclick = ()=> setTab(t.id);
@@ -255,259 +379,112 @@
       });
     }
 
-    // ПЛЕЙСХОЛДЕР
     function emptyCard(label='Скоро'){
       const c = document.createElement('div'); c.className='card';
-      c.innerHTML = `<h3>${label}</h3><div class="pill">Контент появится здесь</div>`;
+      c.innerHTML = `<h3 style="margin:0 0 6px 0; font-size:18px;">${label}</h3><div class="pill">Контент появится здесь</div>`;
       return c;
     }
 
-    // ====== РЕНДЕРЫ ВКЛАДОК ======
-
-    // Продукты: список
-    function renderProductsList(section){
-      const column = document.createElement('div'); column.className='grid';
-
-      const items = (section.items||[]);
-      if (!items.length){ column.appendChild(emptyCard()); return column; }
-
-      items.forEach(it=>{
-        const card = document.createElement('div'); card.className='card';
-        const btn = document.createElement('button');
-        btn.className='btn'; btn.style.width='100%'; btn.style.height='auto'; btn.style.padding='12px'; btn.textContent = it.title;
-        btn.onclick = ()=>{
-          if (it.view === 'rs360') { setTab('products', {view:'rs360'}); }
-        };
-        card.appendChild(btn);
-        column.appendChild(card);
-      });
-      return column;
-    }
-
-    // Продукт: Revenue Sprint 360° (полная страница внутри аппа)
-    function renderProductRS360(){
+    function drawContact(){
       contentEl.innerHTML = `
-        <div class="section heroWrap">
-          <button class="backBtn" id="rsBack">← Назад</button>
-          <div class="heroKicker">Анна Гавричкова · продуктовый спринт</div>
-          <h1 class="heroTitle">Revenue Sprint 360°</h1>
-          <p class="heroSub">14 дней, чтобы выжать +выручку из текущего потока — без роста бюджета и штата.</p>
-          <div class="tabs" style="margin:0 0 4px">
-            <button class="btn brand" id="rsContact">Написать Анне в Telegram</button>
-            <span class="pill" style="margin-left:8px">Посмотреть программу ↓</span>
+        <div class="section">
+          <h2>Связаться со мной</h2>
+          <div class="card" style="align-items:flex-start;gap:14px;">
+            <button class="btn brand" id="btnContact">Открыть чат в Telegram</button>
+            <div class="pill">@${DATA.contact?.username}</div>
           </div>
-        </div>
-
-        <div class="section"><h2>Что это</h2>
-          <div class="split">
-            <div class="card">
-              <h3><b>Быстрая монетизация</b></h3>
-              <p>Диагностика, пересборка офферов и маршрутов, реактивация базы, допродажи — первые оплаты обычно в 10–14 дней.</p>
-            </div>
-            <div class="card">
-              <h3><b>Управляемая воронка</b></h3>
-              <p>Прозрачные точки контроля, цикл сделки, скрипты follow-up, план активностей на 4 недели вперёд.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Результаты спринта</h2>
-          <div class="split">
-            <div class="card">
-              <h3><b>+20% выручки</b></h3>
-              <p>или эквивалентный прирост за счёт ускорения цикла сделки и роста конверсии на ключевых шагах.</p>
-            </div>
-            <div class="card">
-              <h3><b>Первые деньги за 2 недели</b></h3>
-              <p>реактивация базы и быстрые офферы → оплаченные встречи/счета.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Что делаю в спринте</h2>
-          <div class="split">
-            <div class="card">
-              <span class="kTag">Диагностика → план</span>
-              <ul>
-                <li>Разбор воронки и клиентской базы (утечки/потенциал).</li>
-                <li>Карта точек влияния, гипотезы роста.</li>
-                <li>Прогноз выручки по неделям.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <span class="kTag">Исполнение</span>
-              <ul>
-                <li>Пересборка офферов и КП — язык выгоды.</li>
-                <li>Follow-up-система и сценарии касаний.</li>
-                <li>Реактивация спящих + допродажи активным.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Формат и гарантии</h2>
-          <div class="split">
-            <div class="card">
-              <ul>
-                <li><b>Срок:</b> 7–14 дней.</li>
-                <li>Промежуточный отчёт на 7-й день, финальный — на 14-й.</li>
-                <li>Работаю только с <b>5 проектами</b> одновременно.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <ul>
-                <li><b>Модель оплаты:</b> фикс + опциональный бонус при превышении KPI.</li>
-                <li>При недостижении KPI — <b>возврат 20% гонорара</b>.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Почему ко мне</h2>
-          <div class="split">
-            <div class="card">
-              <ul>
-                <li>Не строю отдел — <b>зарабатываю деньги из того, что уже есть</b>.</li>
-                <li>Скорость и результат вместо долгого консалтинга.</li>
-                <li>Курирую каждый проект лично.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <ul>
-                <li>Язык прибыли, а не «маркетинговых метрик».</li>
-                <li>Отвечаю за <b>выручку</b>, а не за процесс.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Кому подойдёт</h2>
-          <div class="split">
-            <div class="card">
-              <p>B2B-сервисы, EdTech, рекрутинг, агентства, SaaS, интеграторы.</p>
-              <ul>
-                <li>Есть лиды/КП, но нет денег на выходе.</li>
-                <li>Нужны быстрые результаты без роста бюджета.</li>
-                <li>Команда есть, но процессы «тормозят» прибыль.</li>
-              </ul>
-            </div>
-            <div class="card"><p class="kpi">💰 14 дней → <b>+20% выручки</b>.</p></div>
-          </div>
-        </div>
-
-        <div class="section"><h2>Как начать</h2>
-          <div class="card">
-            <ol class="ol">
-              <li>Напишите «СПРИНТ» в Telegram.</li>
-              <li>Мини-бриф (5 вопросов).</li>
-              <li>Через 24 часа — старт работы.</li>
-            </ol>
-            <div class="tabs" style="margin-top:10px">
-              <button class="btn brand" id="rsStart">Хочу Revenue-Sprint</button>
-              <button class="btn" id="rsAsk">Задать вопрос</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // кнопки
-      $('#rsBack').onclick   = ()=> setTab('products');
-      const go = ()=> openLink(contactUrl());
-      $('#rsContact').onclick = go;
-      $('#rsStart').onclick   = go;
-      $('#rsAsk').onclick     = go;
-
-      // подсветка нижнего меню
-      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === 'products'));
+        </div>`;
+      $('#btnContact').onclick = ()=>openLink(contactUrl());
     }
 
-    // Главный рендер
-    function draw(){
-      renderTabs();
-      const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
-
-      // поиск — только в рубриках
-      const showSearch = (tab.id==='rubrics');
-      searchEl.style.display = showSearch ? 'block' : 'none';
-      const q = (searchEl.value||'').trim().toLowerCase();
-
-      // подсветка нижней навигации
-      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab.id));
-
-      // Связь
-      if (tab.id==='contact'){
-        contentEl.innerHTML = `
-          <div class="section">
-            <h2>Связаться со мной</h2>
-            <div class="card" style="align-items:flex-start;gap:14px;">
-              <button class="btn brand" id="btnContact">Открыть чат в Telegram</button>
-              <div class="pill">@${DATA.contact?.username}</div>
-            </div>
-          </div>
-        `;
-        $('#btnContact').onclick = ()=> openLink(contactUrl());
+    function drawProducts(){
+      // если открыт внутренний экран продукта
+      if (activeView === 'rs360'){
+        contentEl.innerHTML = RS360_VIEW_HTML;
         return;
       }
+      // список продуктов
+      const wrap = document.createElement('div');
+      (DATA.tabs.find(x=>x.id==='products').groups || []).forEach(g=>{
+        const sec = document.createElement('div'); sec.className='section';
+        sec.innerHTML = `<h2>${g.tag}</h2>`;
+        const column = document.createElement('div'); column.className='grid';
 
-      // Продукты — роут на внутреннюю страницу
-      if (tab.id==='products' && productView === 'rs360'){
-        renderProductRS360();
-        return;
-      }
+        if (!g.items || !g.items.length){
+          column.appendChild(emptyCard());
+        } else {
+          g.items.forEach(it=>{
+            const card = document.createElement('div'); card.className='card';
+            const btn = document.createElement('button'); btn.className='btn'; btn.style.cssText='width:100%; height:auto; padding:12px; line-height:1.35;';
+            btn.textContent = it.title;
+            if (it.type === 'internal' && it.id === 'rs360'){
+              btn.onclick = ()=> setView('rs360');
+            } else if (it.link){
+              btn.onclick = ()=> openLink(it.link);
+            }
+            card.appendChild(btn);
+            column.appendChild(card);
+          });
+          const cnt = document.createElement('div'); cnt.className='pill'; cnt.style.cssText='width:100%; justify-content:center;';
+          cnt.textContent = `${g.items.length} записи`;
+          sec.appendChild(column); sec.appendChild(cnt);
+        }
+        wrap.appendChild(sec);
+      });
+      contentEl.innerHTML = ''; contentEl.appendChild(wrap);
+    }
 
-      // Списки (Рубрики / Подкаст / Кейсы / Продукты-список)
+    function drawCommonTab(tab){
+      searchEl.style.display = (tab.id==='rubrics') ? 'block' : 'none';
+      const q = (searchEl.value || '').trim().toLowerCase();
       const wrap = document.createElement('div');
 
-      (tab.groups||[]).forEach(group=>{
+      (tab.groups||[]).forEach(g=>{
         const sec = document.createElement('div'); sec.className='section';
-        const h = document.createElement('h2'); h.textContent = group.tag; sec.appendChild(h);
+        const h = document.createElement('h2'); h.textContent = g.tag; sec.appendChild(h);
 
-        let column;
+        const column = document.createElement('div'); column.className='grid';
+        let items = g.items || [];
+        if (tab.id==='rubrics' && q) items = items.filter(it => (it.title||'').toLowerCase().includes(q));
 
-        if (tab.id === 'products'){
-          // список продуктов
-          column = renderProductsList(group);
-
+        if (!items.length){
+          column.appendChild(emptyCard());
         } else {
-          // обычная сетка статей/записей
-          column = document.createElement('div'); column.className='grid';
-          let items = group.items || [];
-          if (tab.id==='rubrics' && q) items = items.filter(it => (it.title||'').toLowerCase().includes(q));
-
-          if (!items.length){
-            column.appendChild(emptyCard());
-          } else {
-            items.forEach(it=>{
-              const card = document.createElement('div'); card.className='card';
-              const btn = document.createElement('button');
-              btn.className='btn'; btn.style.width='100%'; btn.style.height='auto'; btn.style.padding='12px';
-              btn.textContent = it.title;
-              btn.onclick = ()=> openLink(it.link || it.audio);
-              card.appendChild(btn);
-              column.appendChild(card);
-            });
-            const cnt = document.createElement('div');
-            cnt.className='pill'; cnt.style.width='100%'; cnt.style.justifyContent='center';
-            cnt.textContent = `${items.length} записи`;
-            sec.appendChild(column); sec.appendChild(cnt); wrap.appendChild(sec);
-            return;
-          }
+          items.forEach(it=>{
+            const card = document.createElement('div'); card.className='card';
+            const btn = document.createElement('button'); btn.className='btn'; btn.style.cssText='width:100%; height:auto; padding:12px; line-height:1.35;';
+            btn.textContent = it.title;
+            btn.onclick = ()=> openLink(it.link || it.audio);
+            card.appendChild(btn);
+            column.appendChild(card);
+          });
+          const cnt = document.createElement('div'); cnt.className='pill'; cnt.style.cssText='width:100%; justify-content:center;';
+          cnt.textContent = `${items.length} записи`;
+          sec.appendChild(column); sec.appendChild(cnt);
         }
-
-        sec.appendChild(column);
         wrap.appendChild(sec);
       });
 
-      contentEl.innerHTML = '';
-      contentEl.appendChild(wrap);
+      contentEl.innerHTML = ''; contentEl.appendChild(wrap);
     }
 
-    // события
-    searchEl.addEventListener('input', draw);
-    $all('.nav-btn').forEach(b => b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+    function draw(){
+      renderTabs();
+      const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
+      // подсветка низа
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab.id));
+      // роутинг
+      if (tab.id==='contact') return drawContact();
+      if (tab.id==='products') return drawProducts();
+      return drawCommonTab(tab);
+    }
 
-    // старт
-    setTab(activeTab, {view: productView || ''});
+    // events
+    navButtons.forEach(b => b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+    searchEl.addEventListener('input', draw);
+
+    // first render
+    draw();
   </script>
 </body>
 </html>
