@@ -11,8 +11,6 @@
 
   <style>
     :root{
-      /* фон: можно оставить градиент, или подключить фоновое изображение:
-         поменяй --bg-image: url('assets/nav-bg.jpg');  на none, если не нужно */
       --bg-image: none;
       --bg-base: #eeeeef;
       --brand:  #ffb224;
@@ -85,7 +83,7 @@
     }
     .subtitle{ color:var(--muted); margin-top:4px; }
 
-    /* Верхние чипы-табы (оставляем как быстрые фильтры) */
+    /* Верхние чипы-табы */
     .tabs{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 10px; }
     .tab{
       background:var(--chip);
@@ -184,7 +182,7 @@
       <div class="avatar" aria-hidden="true"></div>
       <div>
         <div class="title">Гавричкова | 99,9%</div>
-        <div class="subtitle">Навигация по рубрикам · Подкаст · Кейсы · Связь</div>
+        <div class="subtitle">Навигация по рубрикам · Подкаст · Кейсы · Продукты · Связь</div>
       </div>
     </div>
 
@@ -211,6 +209,9 @@
       </button>
       <button class="nav-btn" data-tab="cases">
         <span class="nav-ico">📂</span><span class="nav-txt">Кейсы</span>
+      </button>
+      <button class="nav-btn" data-tab="products">
+        <span class="nav-ico">🧩</span><span class="nav-txt">Продукты</span>
       </button>
       <button class="nav-btn" data-tab="contact">
         <span class="nav-ico">✉️</span><span class="nav-txt">Связь</span>
@@ -248,13 +249,31 @@
         },
         { id:'podcast', title:'Подкаст', groups:[ { tag:'Скоро', items:[] } ] },
         { id:'cases',   title:'Кейсы',   groups:[ { tag:'Скоро', items:[] } ] },
+
+        /* === НОВЫЙ ТАБ «ПРОДУКТЫ» С КНОПКОЙ REVENUE SPRINT 360° === */
+        { id:'products', title:'Продукты',
+          groups:[{
+            tag:'Рекомендовано',
+            items:[
+              { title:'Revenue Sprint 360°', link:'https://agavrichkova.github.io/tma-99-9/revenue-sprint/' }
+            ]
+          }]
+        },
+
         { id:'contact', title:'Связь',   groups:[] }
       ]
     };
 
     const $ = s => document.querySelector(s);
     function $all(s){ return Array.from(document.querySelectorAll(s)); }
-    function openLink(url){ if (tg?.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); }
+
+    // Открытие ссылок: сначала пробуем tg.openLink (поддерживает внешние URL)
+    function openLink(url){
+      if (tg?.openLink) tg.openLink(url);
+      else if (tg?.openTelegramLink) tg.openTelegramLink(url);
+      else window.open(url, '_blank');
+    }
+
     function contactUrl(){ return DATA.contact?.url || `https://t.me/${DATA.contact?.username}`; }
 
     const tabsEl = $('#tabs');
@@ -304,6 +323,7 @@
       renderTabs();
       const tab = DATA.tabs.find(x=>x.id===activeTab) || DATA.tabs[0];
 
+      // поиск только в рубриках
       searchEl.style.display = (tab.id==='rubrics') ? 'block' : 'none';
       const q = (searchEl.value || '').trim().toLowerCase();
 
